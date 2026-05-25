@@ -13,6 +13,9 @@ interface BenchmarksPageProps {
   profile: InvestorProfile;
   holdings: Holding[];
   assumptions: SimulationAssumptions;
+  annualContribution: number;
+  annualSpend: number;
+  onChange: (values: { annualContribution: number; annualSpend: number }) => void;
   onNext: () => void;
 }
 
@@ -32,13 +35,26 @@ function buildCombinedSeries(
   });
 }
 
-export function BenchmarksPage({ profile, holdings, assumptions, onNext }: BenchmarksPageProps) {
+export function BenchmarksPage({
+  profile,
+  holdings,
+  assumptions,
+  annualContribution,
+  annualSpend,
+  onChange,
+  onNext,
+}: BenchmarksPageProps) {
   const risk = assessInvestorRisk(profile);
   const targets = targetAllocationFromRisk(risk);
   const total = portfolioTotal(holdings);
 
-  const [annualContribution, setAnnualContribution] = useState(6000);
-  const [annualSpend, setAnnualSpend] = useState(36000);
+  function setAnnualContribution(value: number) {
+    onChange({ annualContribution: value, annualSpend });
+  }
+
+  function setAnnualSpend(value: number) {
+    onChange({ annualContribution, annualSpend: value });
+  }
 
   const [selectedBenchmarks, setSelectedBenchmarks] = useState<Set<string>>(
     new Set(['all-equity', 'sixty-forty', 'carver']),

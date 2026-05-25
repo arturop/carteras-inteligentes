@@ -72,6 +72,11 @@ function App() {
           profile={state.profile}
           holdings={state.holdings}
           assumptions={state.assumptions}
+          annualContribution={state.annualContribution}
+          annualSpend={state.annualSpend}
+          onChange={({ annualContribution, annualSpend }) =>
+            setState((current) => ({ ...current, annualContribution, annualSpend }))
+          }
           onNext={goNext}
         />
       )}
@@ -80,6 +85,11 @@ function App() {
           profile={state.profile}
           holdings={state.holdings}
           assumptions={state.assumptions}
+          annualContribution={state.annualContribution}
+          annualSpend={state.annualSpend}
+          onChange={({ annualContribution, annualSpend }) =>
+            setState((current) => ({ ...current, annualContribution, annualSpend }))
+          }
           onNext={goNext}
         />
       )}

@@ -12,6 +12,8 @@ export interface AppState {
   profile: InvestorProfile;
   holdings: Holding[];
   assumptions: SimulationAssumptions;
+  annualContribution: number;
+  annualSpend: number;
 }
 
 export const initialAppState: AppState = {
@@ -19,6 +21,8 @@ export const initialAppState: AppState = {
   profile: defaultProfile,
   holdings: sampleHoldings(),
   assumptions: defaultAssumptions,
+  annualContribution: 0,
+  annualSpend: 0,
 };
 
 export const steps: Array<{ id: StepId; label: string; description: string }> = [

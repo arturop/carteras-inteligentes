@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo } from 'react';
 import type { InvestorProfile } from '../domain/investorProfile';
 import { assessInvestorRisk } from '../domain/investorProfile';
 import type { Holding } from '../domain/portfolio';
@@ -14,16 +14,32 @@ interface EvolutionPageProps {
   profile: InvestorProfile;
   holdings: Holding[];
   assumptions: SimulationAssumptions;
+  annualContribution: number;
+  annualSpend: number;
+  onChange: (values: { annualContribution: number; annualSpend: number }) => void;
   onNext: () => void;
 }
 
-export function EvolutionPage({ profile, holdings, assumptions, onNext }: EvolutionPageProps) {
+export function EvolutionPage({
+  profile,
+  holdings,
+  assumptions,
+  annualContribution,
+  annualSpend,
+  onChange,
+  onNext,
+}: EvolutionPageProps) {
   const risk = assessInvestorRisk(profile);
   const targets = targetAllocationFromRisk(risk);
   const total = portfolioTotal(holdings);
 
-  const [annualContribution, setAnnualContribution] = useState(6000);
-  const [annualSpend, setAnnualSpend] = useState(36000);
+  function setAnnualContribution(value: number) {
+    onChange({ annualContribution: value, annualSpend });
+  }
+
+  function setAnnualSpend(value: number) {
+    onChange({ annualContribution, annualSpend: value });
+  }
 
   const projection = useMemo(
     () => projectPortfolio(total, targets, assumptions, annualContribution, annualSpend),
