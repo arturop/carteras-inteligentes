@@ -9,6 +9,7 @@ import { ProfilePage } from './pages/ProfilePage';
 import { PortfolioPage } from './pages/PortfolioPage';
 import { AssumptionsPage } from './pages/AssumptionsPage';
 import { TargetPage } from './pages/TargetPage';
+import { EvolutionPage } from './pages/EvolutionPage';
 import { ActionPlanPage } from './pages/ActionPlanPage';
 
 function App() {
@@ -59,6 +60,14 @@ function App() {
       )}
       {state.currentStep === 'objetivo' && (
         <TargetPage
+          profile={state.profile}
+          holdings={state.holdings}
+          assumptions={state.assumptions}
+          onNext={goNext}
+        />
+      )}
+      {state.currentStep === 'evolucion' && (
+        <EvolutionPage
           profile={state.profile}
           holdings={state.holdings}
           assumptions={state.assumptions}

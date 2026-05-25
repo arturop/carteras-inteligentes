@@ -74,6 +74,99 @@ export function simulatePortfolio(
   });
 }
 
+export interface YearProjection {
+  year: number;
+  centralValue: number;
+  optimisticValue: number;
+  pessimisticValue: number;
+  contributionsValue: number;
+}
+
+export interface ProjectionSummary {
+  years: YearProjection[];
+  maxDrawdownPct: number;
+  annualContribution: number;
+  annualSpend: number;
+  independenceYear: { central: number | null; optimistic: number | null; pessimistic: number | null };
+}
+
+export function projectPortfolio(
+  currentValue: number,
+  targetAllocation: Array<{ assetClass: string; targetPercent: number }>,
+  assumptions: SimulationAssumptions,
+  annualContribution: number,
+  annualSpend: number,
+): ProjectionSummary {
+  const weightedReturn = targetAllocation.reduce((sum, target) => {
+    const assetReturn = assumptions.annualReturns.find((r) => r.assetClass === target.assetClass);
+    const returnPct = assetReturn?.expectedRealReturnPct ?? 0;
+    return sum + (target.targetPercent / 100) * returnPct;
+  }, 0);
+
+  const pessimisticReturn = weightedReturn * 0.6;
+  const optimisticReturn = weightedReturn * 1.3;
+
+  const years: YearProjection[] = [];
+  let centralValue = currentValue;
+  let optimisticValue = currentValue;
+  let pessimisticValue = currentValue;
+  let contributionsValue = 0;
+
+  let peakValue = currentValue;
+  let maxDrawdownPct = 0;
+
+  const independenceYear: { central: number | null; optimistic: number | null; pessimistic: number | null } = {
+    central: null,
+    optimistic: null,
+    pessimistic: null,
+  };
+
+  for (let year = 1; year <= assumptions.yearsToProject; year++) {
+    contributionsValue += annualContribution;
+    const totalCentral = centralValue + annualContribution - annualSpend;
+    const totalOptimistic = optimisticValue + annualContribution - annualSpend;
+    const totalPessimistic = pessimisticValue + annualContribution - annualSpend;
+
+    centralValue = totalCentral * (1 + weightedReturn / 100);
+    optimisticValue = totalOptimistic * (1 + optimisticReturn / 100);
+    pessimisticValue = totalPessimistic * (1 + pessimisticReturn / 100);
+
+    if (centralValue > peakValue) {
+      peakValue = centralValue;
+    }
+    const drawdown = ((peakValue - centralValue) / peakValue) * 100;
+    if (drawdown > maxDrawdownPct) {
+      maxDrawdownPct = drawdown;
+    }
+
+    if (independenceYear.central === null && centralValue >= annualSpend * 25) {
+      independenceYear.central = year;
+    }
+    if (independenceYear.optimistic === null && optimisticValue >= annualSpend * 25) {
+      independenceYear.optimistic = year;
+    }
+    if (independenceYear.pessimistic === null && pessimisticValue >= annualSpend * 25) {
+      independenceYear.pessimistic = year;
+    }
+
+    years.push({
+      year,
+      centralValue: Math.round(centralValue),
+      optimisticValue: Math.round(optimisticValue),
+      pessimisticValue: Math.round(pessimisticValue),
+      contributionsValue: Math.round(contributionsValue),
+    });
+  }
+
+  return {
+    years,
+    maxDrawdownPct: Math.round(maxDrawdownPct * 10) / 10,
+    annualContribution,
+    annualSpend,
+    independenceYear,
+  };
+}
+
 export function formatCurrency(value: number): string {
   return Math.round(value).toLocaleString('es-ES') + ' €';
 }
