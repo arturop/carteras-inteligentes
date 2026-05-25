@@ -7,6 +7,7 @@ import { targetAllocationFromRisk } from '../domain/allocation';
 import type { SimulationAssumptions, BenchmarkComparison } from '../domain/assumptions';
 import { projectPortfolio, compareBenchmarks, formatCurrency } from '../domain/assumptions';
 import { Card } from '../components/Card';
+import { CurrencyInput } from '../components/CurrencyInput';
 
 interface BenchmarksPageProps {
   profile: InvestorProfile;
@@ -85,30 +86,22 @@ export function BenchmarksPage({ profile, holdings, assumptions, onNext }: Bench
 
       <Card title="Tu escenario base" tone="highlight">
         <div className="input-grid">
-          <div className="input-group">
-            <label htmlFor="bench-contribution">¿Cuánto invertirás al año? (€)</label>
-            <input
-              id="bench-contribution"
-              type="number"
-              min={0}
-              step={500}
-              value={annualContribution}
-              onChange={(e) => setAnnualContribution(Math.max(0, Number(e.target.value) || 0))}
-            />
-            <p className="input-help">Cantidad que planeas aportar a tu cartera cada año (después de impuestos). Si no aportas regularmente, pon 0.</p>
-          </div>
-          <div className="input-group">
-            <label htmlFor="bench-spend">¿Cuánto quieres poder vivir al año? (€)</label>
-            <input
-              id="bench-spend"
-              type="number"
-              min={0}
-              step={1000}
-              value={annualSpend}
-              onChange={(e) => setAnnualSpend(Math.max(0, Number(e.target.value) || 0))}
-            />
-            <p className="input-help">El gasto anual que quieres cubrir con tu cartera cuando dejes de trabajar. La independencia se alcanza cuando el patrimonio llega a 25× esta cantidad (regla del 4%).</p>
-          </div>
+          <CurrencyInput
+            id="bench-annualContribution"
+            label="¿Cuánto invertirás al año? (€)"
+            help="Cantidad que planeas aportar a tu cartera cada año (después de impuestos). Si no aportas regularmente, pon 0."
+            value={annualContribution}
+            step={500}
+            onChange={setAnnualContribution}
+          />
+          <CurrencyInput
+            id="bench-annualSpend"
+            label="¿Cuánto quieres poder vivir al año? (€)"
+            help="El gasto anual que quieres cubrir con tu cartera cuando dejes de trabajar. La independencia se alcanza cuando el patrimonio llega a 25× esta cantidad (regla del 4%)."
+            value={annualSpend}
+            step={1000}
+            onChange={setAnnualSpend}
+          />
         </div>
       </Card>
 
