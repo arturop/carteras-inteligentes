@@ -128,14 +128,16 @@ export function projectPortfolio(
     contributionsValue += annualContribution;
 
     // Portfolio growth (without spend) — used for drawdown calculation
-    centralValue = centralValue * (1 + weightedReturn / 100) + annualContribution;
-    optimisticValue = optimisticValue * (1 + optimisticReturn / 100) + annualContribution;
-    pessimisticValue = pessimisticValue * (1 + pessimisticReturn / 100) + annualContribution;
+    centralValue = Math.max(0, centralValue) * (1 + weightedReturn / 100) + annualContribution;
+    optimisticValue = Math.max(0, optimisticValue) * (1 + optimisticReturn / 100) + annualContribution;
+    pessimisticValue = Math.max(0, pessimisticValue) * (1 + pessimisticReturn / 100) + annualContribution;
 
     // Net worth (with spend) — used for independence year and display
-    centralWithSpend = centralWithSpend * (1 + weightedReturn / 100) + annualContribution - annualSpend;
-    optimisticWithSpend = optimisticWithSpend * (1 + optimisticReturn / 100) + annualContribution - annualSpend;
-    pessimisticWithSpend = pessimisticWithSpend * (1 + pessimisticReturn / 100) + annualContribution - annualSpend;
+    // Each year: apply growth, add contribution, then spend what's available.
+    // Portfolio cannot go below 0 (no debt, no negative wealth).
+    centralWithSpend = Math.max(0, Math.max(0, centralWithSpend) * (1 + weightedReturn / 100) + annualContribution - annualSpend);
+    optimisticWithSpend = Math.max(0, Math.max(0, optimisticWithSpend) * (1 + optimisticReturn / 100) + annualContribution - annualSpend);
+    pessimisticWithSpend = Math.max(0, Math.max(0, pessimisticWithSpend) * (1 + pessimisticReturn / 100) + annualContribution - annualSpend);
 
     // Drawdown is calculated on the investment portfolio (without spend)
     if (centralValue > peakValue) {
