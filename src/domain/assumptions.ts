@@ -175,6 +175,104 @@ export function projectPortfolio(
   };
 }
 
+export interface BenchmarkDefinition {
+  id: string;
+  name: string;
+  description: string;
+  color: string;
+  allocation: Array<{ assetClass: string; targetPercent: number }>;
+}
+
+export const benchmarks: BenchmarkDefinition[] = [
+  {
+    id: 'all-equity',
+    name: '100% RV global',
+    description: 'El índice global más simple. Sin bonos, sin efectivo. Máximo crecimiento, máxima volatilidad.',
+    color: '#16a34a',
+    allocation: [
+      { assetClass: 'renta-variable', targetPercent: 100 },
+      { assetClass: 'renta-fija', targetPercent: 0 },
+      { assetClass: 'monetario-liquidez', targetPercent: 0 },
+    ],
+  },
+  {
+    id: 'sixty-forty',
+    name: '60/40 clásico',
+    description: 'La asignación tradicional. 60% renta variable global, 40% renta fija. Buena relación rentabilidad/riesgo.',
+    color: '#2563eb',
+    allocation: [
+      { assetClass: 'renta-variable', targetPercent: 60 },
+      { assetClass: 'renta-fija', targetPercent: 40 },
+      { assetClass: 'monetario-liquidez', targetPercent: 0 },
+    ],
+  },
+  {
+    id: 'all-bonds',
+    name: 'Todo renta fija',
+    description: 'Conservador. Protege capital pero apenas supera la inflación. Para los que priorizan dormir tranquilos.',
+    color: '#d97706',
+    allocation: [
+      { assetClass: 'renta-variable', targetPercent: 0 },
+      { assetClass: 'renta-fija', targetPercent: 100 },
+      { assetClass: 'monetario-liquidez', targetPercent: 0 },
+    ],
+  },
+  {
+    id: 'carver',
+    name: 'Cartera Carver',
+    description: 'La propuesta del libro: 50% RV global, 30% RF, 20% inmobiliario. Simple, robusta, sin optimización.',
+    color: '#7c3aed',
+    allocation: [
+      { assetClass: 'renta-variable', targetPercent: 50 },
+      { assetClass: 'renta-fija', targetPercent: 30 },
+      { assetClass: 'monetario-liquidez', targetPercent: 0 },
+      { assetClass: 'inmobiliario', targetPercent: 20 },
+      { assetClass: 'otros', targetPercent: 0 },
+    ],
+  },
+];
+
+export interface BenchmarkProjection {
+  benchmark: BenchmarkDefinition;
+  projection: ProjectionSummary;
+}
+
+export interface BenchmarkComparison {
+  userProjection: ProjectionSummary;
+  userLabel: string;
+  userColor: string;
+  benchmarks: BenchmarkProjection[];
+}
+
+export function compareBenchmarks(
+  userProjection: ProjectionSummary,
+  userLabel: string,
+  userColor: string,
+  currentValue: number,
+  targetAllocation: Array<{ assetClass: string; targetPercent: number }>,
+  assumptions: SimulationAssumptions,
+  annualContribution: number,
+  annualSpend: number,
+): BenchmarkComparison {
+  const benchmarkProjections: BenchmarkProjection[] = benchmarks.map((benchmark) => ({
+    benchmark,
+    projection: projectPortfolio(
+      currentValue,
+      benchmark.allocation,
+      assumptions,
+      annualContribution,
+      annualSpend,
+    ),
+  }));
+
+  return {
+    userProjection,
+    userLabel,
+    userColor,
+    benchmarks: benchmarkProjections,
+  };
+}
+
 export function formatCurrency(value: number): string {
   return Math.round(value).toLocaleString('es-ES') + ' €';
 }

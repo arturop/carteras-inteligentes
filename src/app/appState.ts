@@ -5,7 +5,7 @@ import { sampleHoldings } from '../domain/portfolio';
 import type { SimulationAssumptions } from '../domain/assumptions';
 import { defaultAssumptions } from '../domain/assumptions';
 
-export type StepId = 'inicio' | 'perfil' | 'cartera' | 'supuestos' | 'objetivo' | 'evolucion' | 'plan';
+export type StepId = 'inicio' | 'perfil' | 'cartera' | 'supuestos' | 'objetivo' | 'evolucion' | 'benchmarks' | 'plan';
 
 export interface AppState {
   currentStep: StepId;
@@ -28,6 +28,7 @@ export const steps: Array<{ id: StepId; label: string; description: string }> = 
   { id: 'supuestos', label: 'Supuestos', description: 'Rentabilidades y parámetros' },
   { id: 'objetivo', label: 'Cartera objetivo', description: 'Asignación estratégica' },
   { id: 'evolucion', label: 'Evolución', description: 'Proyección y escenarios' },
+  { id: 'benchmarks', label: 'Benchmarks', description: '¿Es que no puedes simplemente…?' },
   { id: 'plan', label: 'Plan', description: 'Acciones y rebalanceo' },
 ];
 

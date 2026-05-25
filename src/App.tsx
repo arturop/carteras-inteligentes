@@ -10,6 +10,7 @@ import { PortfolioPage } from './pages/PortfolioPage';
 import { AssumptionsPage } from './pages/AssumptionsPage';
 import { TargetPage } from './pages/TargetPage';
 import { EvolutionPage } from './pages/EvolutionPage';
+import { BenchmarksPage } from './pages/BenchmarksPage';
 import { ActionPlanPage } from './pages/ActionPlanPage';
 
 function App() {
@@ -68,6 +69,14 @@ function App() {
       )}
       {state.currentStep === 'evolucion' && (
         <EvolutionPage
+          profile={state.profile}
+          holdings={state.holdings}
+          assumptions={state.assumptions}
+          onNext={goNext}
+        />
+      )}
+      {state.currentStep === 'benchmarks' && (
+        <BenchmarksPage
           profile={state.profile}
           holdings={state.holdings}
           assumptions={state.assumptions}
