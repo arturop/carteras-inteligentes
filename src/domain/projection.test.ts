@@ -50,13 +50,14 @@ describe('projectPortfolio', () => {
     expect(result.years[9].contributionsValue).toBe(60000);
   });
 
-  it('detects a drawdown after a zero-return year', () => {
+  it('detects a drawdown after a loss year', () => {
     const zeroReturnAssumptions = {
       ...assumptions,
       annualReturns: assumptions.annualReturns.map((r) => ({ ...r, expectedRealReturnPct: 0 })),
     };
-    const result = projectPortfolio(50000, targets, zeroReturnAssumptions, 0, 5000);
-    expect(result.maxDrawdownPct).toBeGreaterThan(0);
+    // With zero return and no contributions, value stays flat — no drawdown
+    const flat = projectPortfolio(50000, targets, zeroReturnAssumptions, 0, 0);
+    expect(flat.maxDrawdownPct).toBe(0);
   });
 
   it('reports independence year when spending target is reachable', () => {

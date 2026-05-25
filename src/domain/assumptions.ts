@@ -110,6 +110,9 @@ export function projectPortfolio(
   let centralValue = currentValue;
   let optimisticValue = currentValue;
   let pessimisticValue = currentValue;
+  let centralWithSpend = currentValue;
+  let optimisticWithSpend = currentValue;
+  let pessimisticWithSpend = currentValue;
   let contributionsValue = 0;
 
   let peakValue = currentValue;
@@ -123,14 +126,18 @@ export function projectPortfolio(
 
   for (let year = 1; year <= assumptions.yearsToProject; year++) {
     contributionsValue += annualContribution;
-    const totalCentral = centralValue + annualContribution - annualSpend;
-    const totalOptimistic = optimisticValue + annualContribution - annualSpend;
-    const totalPessimistic = pessimisticValue + annualContribution - annualSpend;
 
-    centralValue = totalCentral * (1 + weightedReturn / 100);
-    optimisticValue = totalOptimistic * (1 + optimisticReturn / 100);
-    pessimisticValue = totalPessimistic * (1 + pessimisticReturn / 100);
+    // Portfolio growth (without spend) — used for drawdown calculation
+    centralValue = centralValue * (1 + weightedReturn / 100) + annualContribution;
+    optimisticValue = optimisticValue * (1 + optimisticReturn / 100) + annualContribution;
+    pessimisticValue = pessimisticValue * (1 + pessimisticReturn / 100) + annualContribution;
 
+    // Net worth (with spend) — used for independence year and display
+    centralWithSpend = centralWithSpend * (1 + weightedReturn / 100) + annualContribution - annualSpend;
+    optimisticWithSpend = optimisticWithSpend * (1 + optimisticReturn / 100) + annualContribution - annualSpend;
+    pessimisticWithSpend = pessimisticWithSpend * (1 + pessimisticReturn / 100) + annualContribution - annualSpend;
+
+    // Drawdown is calculated on the investment portfolio (without spend)
     if (centralValue > peakValue) {
       peakValue = centralValue;
     }
@@ -139,21 +146,22 @@ export function projectPortfolio(
       maxDrawdownPct = drawdown;
     }
 
-    if (independenceYear.central === null && centralValue >= annualSpend * 25) {
+    // Independence year uses net worth (with spend)
+    if (independenceYear.central === null && centralWithSpend >= annualSpend * 25) {
       independenceYear.central = year;
     }
-    if (independenceYear.optimistic === null && optimisticValue >= annualSpend * 25) {
+    if (independenceYear.optimistic === null && optimisticWithSpend >= annualSpend * 25) {
       independenceYear.optimistic = year;
     }
-    if (independenceYear.pessimistic === null && pessimisticValue >= annualSpend * 25) {
+    if (independenceYear.pessimistic === null && pessimisticWithSpend >= annualSpend * 25) {
       independenceYear.pessimistic = year;
     }
 
     years.push({
       year,
-      centralValue: Math.round(centralValue),
-      optimisticValue: Math.round(optimisticValue),
-      pessimisticValue: Math.round(pessimisticValue),
+      centralValue: Math.round(centralWithSpend),
+      optimisticValue: Math.round(optimisticWithSpend),
+      pessimisticValue: Math.round(pessimisticWithSpend),
       contributionsValue: Math.round(contributionsValue),
     });
   }
