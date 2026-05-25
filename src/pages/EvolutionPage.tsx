@@ -32,6 +32,8 @@ export function EvolutionPage({ profile, holdings, assumptions, onNext }: Evolut
   const independenceYears = projection.independenceYear;
   const hasIndependence = independenceYears.central !== null || independenceYears.optimistic !== null;
 
+  const isSpendUnsustainable = annualSpend > 0 && annualSpend > total + annualContribution * assumptions.yearsToProject;
+
   return (
     <div className="page-stack">
       <div className="page-heading">
@@ -43,7 +45,7 @@ export function EvolutionPage({ profile, holdings, assumptions, onNext }: Evolut
       <Card title="Tu escenario base" tone="highlight">
         <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="annualContribution">Aportación anual (€)</label>
+            <label htmlFor="annualContribution">¿Cuánto invertirás al año? (€)</label>
             <input
               id="annualContribution"
               type="number"
@@ -52,10 +54,10 @@ export function EvolutionPage({ profile, holdings, assumptions, onNext }: Evolut
               value={annualContribution}
               onChange={(e) => setAnnualContribution(Math.max(0, Number(e.target.value) || 0))}
             />
-            <p className="input-help">Cuánto planeas invertir al año (después de impuestos). Si no aportas regularmente, pon 0.</p>
+            <p className="input-help">Cantidad que planeas aportar a tu cartera cada año (después de impuestos). Si no aportas regularmente, pon 0.</p>
           </div>
           <div className="input-group">
-            <label htmlFor="annualSpend">Gasto anual objetivo (€)</label>
+            <label htmlFor="annualSpend">¿Cuánto quieres poder vivir al año? (€)</label>
             <input
               id="annualSpend"
               type="number"
@@ -64,7 +66,7 @@ export function EvolutionPage({ profile, holdings, assumptions, onNext }: Evolut
               value={annualSpend}
               onChange={(e) => setAnnualSpend(Math.max(0, Number(e.target.value) || 0))}
             />
-            <p className="input-help">Cuánto necesitarías vivir al año. La regla del 4% usa 25× como objetivo de independencia.</p>
+            <p className="input-help">El gasto anual que quieres cubrir con tu cartera cuando dejes de trabajar. La independencia se alcanza cuando el patrimonio llega a 25× esta cantidad (regla del 4%).</p>
           </div>
         </div>
         <div className="highlight-grid">
@@ -81,6 +83,31 @@ export function EvolutionPage({ profile, holdings, assumptions, onNext }: Evolut
           La banda entre optimista y pesimista es amplia porque el futuro es incierto. Carver insiste en que no confíes en una sola línea.
         </p>
       </Card>
+
+      {isSpendUnsustainable && (
+        <Card title="⚠️ Gasto insostenible" tone="warning">
+          <p>
+            Tu gasto anual ({formatCurrency(annualSpend)}) es superior a todo lo que vas a tener disponible
+            en el horizonte ({formatCurrency(total + annualContribution * assumptions.yearsToProject)} entre patrimonio
+            actual y aportaciones). La cartera se agotará antes del año {projection.years.find((y) => y.centralValue === 0)?.year ?? assumptions.yearsToProject + 1}.
+          </p>
+          <p className="card-body">
+            Revisa el gasto objetivo o aumenta la aportación anual. La proyección asume que cuando no queda nada, no puedes seguir gastando.
+          </p>
+        </Card>
+      )}
+
+      {!hasIndependence && !isSpendUnsustainable && annualSpend > 0 && (
+        <Card title="Independencia fuera del horizonte" tone="warning">
+          <p>
+            Ni siquiera en el escenario optimista alcanzas los {formatCurrency(annualSpend * 25)} necesarios
+            para sostener un gasto de {formatCurrency(annualSpend)}/año (regla del 4%).
+          </p>
+          <p className="card-body">
+            Puedes ajustar la aportación anual, el gasto objetivo o las rentabilidades esperadas en Supuestos para ver cómo cambia el resultado.
+          </p>
+        </Card>
+      )}
 
       {hasIndependence && (
         <Card title="¿Cuándo alcanzas la independencia?" subtitle="Basado en la regla del 4%: patrimonio ≥ 25 × gasto anual">

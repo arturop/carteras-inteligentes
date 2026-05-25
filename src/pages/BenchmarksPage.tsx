@@ -86,7 +86,7 @@ export function BenchmarksPage({ profile, holdings, assumptions, onNext }: Bench
       <Card title="Tu escenario base" tone="highlight">
         <div className="input-grid">
           <div className="input-group">
-            <label htmlFor="bench-contribution">Aportación anual (€)</label>
+            <label htmlFor="bench-contribution">¿Cuánto invertirás al año? (€)</label>
             <input
               id="bench-contribution"
               type="number"
@@ -95,9 +95,10 @@ export function BenchmarksPage({ profile, holdings, assumptions, onNext }: Bench
               value={annualContribution}
               onChange={(e) => setAnnualContribution(Math.max(0, Number(e.target.value) || 0))}
             />
+            <p className="input-help">Cantidad que planeas aportar a tu cartera cada año (después de impuestos). Si no aportas regularmente, pon 0.</p>
           </div>
           <div className="input-group">
-            <label htmlFor="bench-spend">Gasto anual objetivo (€)</label>
+            <label htmlFor="bench-spend">¿Cuánto quieres poder vivir al año? (€)</label>
             <input
               id="bench-spend"
               type="number"
@@ -106,6 +107,7 @@ export function BenchmarksPage({ profile, holdings, assumptions, onNext }: Bench
               value={annualSpend}
               onChange={(e) => setAnnualSpend(Math.max(0, Number(e.target.value) || 0))}
             />
+            <p className="input-help">El gasto anual que quieres cubrir con tu cartera cuando dejes de trabajar. La independencia se alcanza cuando el patrimonio llega a 25× esta cantidad (regla del 4%).</p>
           </div>
         </div>
       </Card>
