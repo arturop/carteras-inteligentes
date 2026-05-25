@@ -5,9 +5,8 @@ import type { Holding } from '../domain/portfolio';
 import { portfolioTotal } from '../domain/portfolio';
 import { targetAllocationFromRisk } from '../domain/allocation';
 import type { SimulationAssumptions, BenchmarkComparison } from '../domain/assumptions';
-import { projectPortfolio, compareBenchmarks, formatCurrency, formatPercent } from '../domain/assumptions';
+import { projectPortfolio, compareBenchmarks, formatCurrency } from '../domain/assumptions';
 import { Card } from '../components/Card';
-import { ProjectionChart } from '../components/ProjectionChart';
 
 interface BenchmarksPageProps {
   profile: InvestorProfile;
@@ -50,8 +49,8 @@ export function BenchmarksPage({ profile, holdings, assumptions, onNext }: Bench
   );
 
   const comparison = useMemo(
-    () => compareBenchmarks(userProjection, 'Mi cartera', '#0f2433', total, targets, assumptions, annualContribution, annualSpend),
-    [userProjection, total, targets, assumptions, annualContribution, annualSpend],
+    () => compareBenchmarks(userProjection, 'Mi cartera', '#0f2433', total, assumptions, annualContribution, annualSpend),
+    [userProjection, total, assumptions, annualContribution, annualSpend],
   );
 
   const activeBenchmarks = comparison.benchmarks.filter((bp) => selectedBenchmarks.has(bp.benchmark.id));

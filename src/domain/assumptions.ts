@@ -249,7 +249,6 @@ export function compareBenchmarks(
   userLabel: string,
   userColor: string,
   currentValue: number,
-  targetAllocation: Array<{ assetClass: string; targetPercent: number }>,
   assumptions: SimulationAssumptions,
   annualContribution: number,
   annualSpend: number,
