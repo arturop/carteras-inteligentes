@@ -1,4 +1,5 @@
 import type { AppState } from '../app/appState';
+import { defaultAssumptions } from '../domain/assumptions';
 
 const STORAGE_KEY = 'carteras-inteligentes-plan-v1';
 
@@ -10,7 +11,11 @@ export function loadPlan(): AppState | null {
   try {
     const raw = window.localStorage.getItem(STORAGE_KEY);
     if (!raw) return null;
-    return JSON.parse(raw) as AppState;
+    const parsed = JSON.parse(raw) as AppState;
+    if (!parsed.assumptions) {
+      parsed.assumptions = defaultAssumptions;
+    }
+    return parsed;
   } catch {
     return null;
   }
@@ -28,7 +33,11 @@ export function importPlanJson(raw: string): AppState | null {
   try {
     const parsed = JSON.parse(raw);
     if (parsed && parsed.state && parsed.state.profile && Array.isArray(parsed.state.holdings)) {
-      return parsed.state as AppState;
+      const state = parsed.state as AppState;
+      if (!state.assumptions) {
+        state.assumptions = defaultAssumptions;
+      }
+      return state;
     }
     return null;
   } catch {

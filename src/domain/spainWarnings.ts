@@ -1,5 +1,6 @@
 import type { Holding } from './portfolio';
 import { allocationBy, portfolioTotal, weightedAnnualCost } from './portfolio';
+import type { SimulationAssumptions } from './assumptions';
 
 export interface SpainWarning {
   level: 'info' | 'warning' | 'critical';
@@ -7,10 +8,12 @@ export interface SpainWarning {
   message: string;
 }
 
-export function buildSpainWarnings(holdings: Holding[]): SpainWarning[] {
+export function buildSpainWarnings(holdings: Holding[], assumptions?: SimulationAssumptions): SpainWarning[] {
   const warnings: SpainWarning[] = [];
   const total = portfolioTotal(holdings);
   const cost = weightedAnnualCost(holdings);
+  const costThreshold = assumptions?.highCostThresholdPct ?? 0.75;
+  const concentrationThreshold = assumptions?.concentrationThresholdPct ?? 35;
 
   if (total === 0) {
     return [{ level: 'info', title: 'Sin cartera', message: 'Introduce al menos una posición para generar avisos.' }];
@@ -43,26 +46,26 @@ export function buildSpainWarnings(holdings: Holding[]): SpainWarning[] {
     });
   }
 
-  if (cost > 0.75) {
+  if (cost > costThreshold) {
     warnings.push({
       level: 'critical',
       title: 'Costes elevados',
-      message: 'El coste medio ponderado supera el 0,75% anual. Los costes compuestos reducen mucho el resultado a largo plazo.',
+      message: `El coste medio ponderado supera el ${costThreshold}% anual. Los costes compuestos reducen mucho el resultado a largo plazo.`,
     });
-  } else if (cost > 0.35) {
+  } else if (cost > costThreshold * 0.5) {
     warnings.push({
       level: 'warning',
       title: 'Costes revisables',
-      message: 'El coste medio ponderado está por encima de alternativas indexadas baratas. Revisa TER, custodia y cambio de divisa.',
+      message: `El coste medio ponderado está por encima de alternativas indexadas baratas. Revisa TER, custodia y cambio de divisa.`,
     });
   }
 
   const largest = holdings.reduce((max, holding) => (holding.amount > max.amount ? holding : max), holdings[0]);
-  if (largest && (largest.amount / total) * 100 > 35) {
+  if (largest && (largest.amount / total) * 100 > concentrationThreshold) {
     warnings.push({
       level: 'warning',
       title: 'Concentración',
-      message: 'La posición más grande representa más del 35% de la cartera: ' + largest.name + '.',
+      message: `La posición más grande representa más del ${concentrationThreshold}% de la cartera: ${largest.name}.`,
     });
   }
 

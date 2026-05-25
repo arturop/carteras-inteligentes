@@ -7,6 +7,7 @@ import { importPlanJson, loadPlan, savePlan } from './storage/localPlanStore';
 import { HomePage } from './pages/HomePage';
 import { ProfilePage } from './pages/ProfilePage';
 import { PortfolioPage } from './pages/PortfolioPage';
+import { AssumptionsPage } from './pages/AssumptionsPage';
 import { TargetPage } from './pages/TargetPage';
 import { ActionPlanPage } from './pages/ActionPlanPage';
 
@@ -49,8 +50,29 @@ function App() {
           onNext={goNext}
         />
       )}
-      {state.currentStep === 'objetivo' && <TargetPage profile={state.profile} holdings={state.holdings} onNext={goNext} />}
-      {state.currentStep === 'plan' && <ActionPlanPage state={state} profile={state.profile} holdings={state.holdings} />}
+      {state.currentStep === 'supuestos' && (
+        <AssumptionsPage
+          assumptions={state.assumptions}
+          onChange={(assumptions) => setState((current) => ({ ...current, assumptions }))}
+          onNext={goNext}
+        />
+      )}
+      {state.currentStep === 'objetivo' && (
+        <TargetPage
+          profile={state.profile}
+          holdings={state.holdings}
+          assumptions={state.assumptions}
+          onNext={goNext}
+        />
+      )}
+      {state.currentStep === 'plan' && (
+        <ActionPlanPage
+          state={state}
+          profile={state.profile}
+          holdings={state.holdings}
+          assumptions={state.assumptions}
+        />
+      )}
     </AppLayout>
   );
 }
