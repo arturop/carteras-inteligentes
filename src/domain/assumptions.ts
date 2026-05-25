@@ -134,7 +134,7 @@ export function projectPortfolio(
     if (centralValue > peakValue) {
       peakValue = centralValue;
     }
-    const drawdown = ((peakValue - centralValue) / peakValue) * 100;
+    const drawdown = peakValue > 0 ? ((peakValue - centralValue) / peakValue) * 100 : 0;
     if (drawdown > maxDrawdownPct) {
       maxDrawdownPct = drawdown;
     }
