@@ -85,7 +85,7 @@ export function EvolutionPage({ profile, holdings, assumptions, onNext }: Evolut
       {hasIndependence && (
         <Card title="¿Cuándo alcanzas la independencia?" subtitle="Basado en la regla del 4%: patrimonio ≥ 25 × gasto anual">
           <div className="grid-3">
-            <Card title="Pesimista" tone={independenceYears.pessimistic ? 'default' : 'muted'}>
+            <Card title="Pesimista" tone={independenceYears.pessimistic ? 'default' : 'warning'}>
               <div className="target-big">
                 {independenceYears.pessimistic
                   ? 'Año ' + independenceYears.pessimistic
