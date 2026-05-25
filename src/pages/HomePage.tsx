@@ -20,13 +20,13 @@ export function HomePage({ onNext }: HomePageProps) {
 
       <div className="grid-3">
         <Card title="Privado por diseño">
-          <p>La cartera se calcula en tu navegador. En el MVP no hay cuentas, backend, tracking ni llamadas externas.</p>
+          <p>La cartera se calcula en tu navegador. No hay cuentas, backend, tracking ni llamadas externas. Tus datos no salen de este dispositivo.</p>
         </Card>
         <Card title="Pensado para España">
-          <p>Lenguaje, divisa y avisos adaptados: fondos, ETFs, fiscalidad al vender, costes y traspasos.</p>
+          <p>Lenguaje, divisa y avisos adaptados: fondos traspasables, ETFs, fiscalidad al vender, costes de custodia y cambio de divisa. Todo pensado para inversores residentes en España.</p>
         </Card>
         <Card title="Reglas, no predicciones">
-          <p>Riesgo, diversificación, costes y rebalanceo importan más que acertar el mercado del año que viene.</p>
+          <p>Riesgo, diversificación, costes y rebalanceo importan más que acertar el mercado del año que viene. Esta herramienta te ayuda a construir una cartera robusta, no a buscar el próximo valor estrella.</p>
         </Card>
       </div>
 

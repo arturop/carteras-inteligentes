@@ -103,3 +103,6 @@ input, select { width: 100%; border: 1px solid var(--line); border-radius: 12px;
   .grid-3, .two-column, .form-grid { grid-template-columns: 1fr; }
   .hero { padding: 28px; }
 }
+
+.allocation-chart { margin: 16px 0; }
+.allocation-chart h3 { margin: 0 0 8px; font-size: 0.95rem; color: var(--muted); }

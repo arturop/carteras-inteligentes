@@ -2,6 +2,7 @@ import type { Holding } from '../domain/portfolio';
 import { allocationBy, portfolioTotal, weightedAnnualCost } from '../domain/portfolio';
 import { formatAssetClass } from '../domain/allocation';
 import { Card } from '../components/Card';
+import { AllocationChart } from '../components/AllocationChart';
 
 interface PortfolioPageProps {
   holdings: Holding[];
@@ -47,11 +48,11 @@ export function PortfolioPage({ holdings, onChange, onNext }: PortfolioPageProps
         <p>Introduce posiciones aproximadas. Para el MVP basta con importes y grandes categorías.</p>
       </div>
 
-      <Card title="Posiciones">
+      <Card title="Posiciones" subtitle="Introduce cada fondo, ETF, acción o posición que tengas. No necesitas ser exacto: aproximaciones razonables son suficientes para el diagnóstico.">
         <div className="holdings-list">
           {holdings.map((holding) => (
             <div className="holding-row" key={holding.id}>
-              <input aria-label="Nombre" value={holding.name} onChange={(event) => updateHolding(holding.id, { name: event.target.value })} />
+              <input aria-label="Nombre" placeholder="Ej: Indexa Capital RV Global" value={holding.name} onChange={(event) => updateHolding(holding.id, { name: event.target.value })} />
               <select value={holding.assetClass} onChange={(event) => updateHolding(holding.id, { assetClass: event.target.value as Holding['assetClass'] })}>
                 <option value="renta-variable">Renta variable</option>
                 <option value="renta-fija">Renta fija</option>
@@ -67,20 +68,21 @@ export function PortfolioPage({ holdings, onChange, onNext }: PortfolioPageProps
                 <option value="cash">Cash</option>
                 <option value="otro">Otro</option>
               </select>
-              <input aria-label="Importe" type="number" min="0" value={holding.amount} onChange={(event) => updateHolding(holding.id, { amount: Number(event.target.value) })} />
-              <input aria-label="Coste anual" type="number" min="0" step="0.01" value={holding.annualCostPct} onChange={(event) => updateHolding(holding.id, { annualCostPct: Number(event.target.value) })} />
+              <input aria-label="Importe" type="number" min="0" placeholder="0" value={holding.amount} onChange={(event) => updateHolding(holding.id, { amount: Number(event.target.value) })} />
+              <input aria-label="Coste anual" type="number" min="0" step="0.01" placeholder="0.20" value={holding.annualCostPct} onChange={(event) => updateHolding(holding.id, { annualCostPct: Number(event.target.value) })} />
               <button className="ghost-button" type="button" onClick={() => removeHolding(holding.id)}>Eliminar</button>
             </div>
           ))}
         </div>
         <button className="secondary-button" onClick={addHolding} type="button">Añadir posición</button>
+        <p className="card-body" style={{ marginTop: 12 }}>El coste anual es el TER del fondo o ETF más los costes de custodia y cambio de divisa si los tienes. Si no lo sabes, puedes dejarlo en 0 y revisarlo después.</p>
       </Card>
 
       <div className="two-column">
         <Card title="Resumen">
           <p><strong>Total:</strong> {Math.round(total).toLocaleString('es-ES')} €</p>
           <p><strong>Coste medio ponderado:</strong> {cost.toFixed(2)}% anual</p>
-          <h3>Por tipo de activo</h3>
+          <AllocationChart data={assetAllocation} title="Por tipo de activo" />
           <ul className="metric-list">
             {assetAllocation.map((line) => <li key={line.key}><span>{formatAssetClass(line.key)}</span><strong>{line.percent.toFixed(1)}%</strong></li>)}
           </ul>

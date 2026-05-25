@@ -23,33 +23,33 @@ export function ProfilePage({ profile, onChange, onNext }: ProfilePageProps) {
       <div className="two-column">
         <Card title="Tus datos básicos">
           <div className="form-grid">
-            <FormField label="Edad"><NumberInput value={profile.age} onChange={(age) => onChange({ ...profile, age })} /></FormField>
-            <FormField label="Horizonte temporal (años)"><NumberInput value={profile.horizonYears} onChange={(horizonYears) => onChange({ ...profile, horizonYears })} /></FormField>
-            <FormField label="Aportación mensual (€)"><NumberInput value={profile.monthlyContribution} step={50} onChange={(monthlyContribution) => onChange({ ...profile, monthlyContribution })} /></FormField>
-            <FormField label="Colchón de liquidez (meses)"><NumberInput value={profile.emergencyFundMonths} onChange={(emergencyFundMonths) => onChange({ ...profile, emergencyFundMonths })} /></FormField>
+            <FormField label="Edad" help="Determina cuánto tiempo puedes mantener la cartera sin necesidad de vender."><NumberInput value={profile.age} onChange={(age) => onChange({ ...profile, age })} /></FormField>
+            <FormField label="Horizonte temporal (años)" help="Años previstos hasta que necesites usar el capital. A mayor horizonte, más riesgo puedes asumir."><NumberInput value={profile.horizonYears} onChange={(horizonYears) => onChange({ ...profile, horizonYears })} /></FormField>
+            <FormField label="Aportación mensual (€)" help="Cantidad media que piensas invertir cada mes. Ayuda a planificar el rebalanceo con nuevas aportaciones."><NumberInput value={profile.monthlyContribution} step={50} onChange={(monthlyContribution) => onChange({ ...profile, monthlyContribution })} /></FormField>
+            <FormField label="Colchón de liquidez (meses)" help="Meses de gastos cubiertos en cuenta corriente o monetario. Si es bajo, conviene no asumir demasiado riesgo."><NumberInput value={profile.emergencyFundMonths} onChange={(emergencyFundMonths) => onChange({ ...profile, emergencyFundMonths })} /></FormField>
 
-            <FormField label="Tolerancia a caídas">
+            <FormField label="Tolerancia a caídas" help="Caída máxima que podrías soportar sin vender por pánico. Sé honesto: en crisis reales, la tolerancia suele ser menor de la que creemos.">
               <select value={profile.drawdownTolerance} onChange={(event) => onChange({ ...profile, drawdownTolerance: event.target.value as InvestorProfile['drawdownTolerance'] })}>
-                <option value="baja">Baja</option>
-                <option value="media">Media</option>
-                <option value="alta">Alta</option>
-                <option value="muy-alta">Muy alta</option>
+                <option value="baja">Baja — no quiero ver pérdidas superiores al 10%</option>
+                <option value="media">Media — puedo tolerar caídas del 15–25%</option>
+                <option value="alta">Alta — asumo caídas del 25–35%</option>
+                <option value="muy-alta">Muy alta — acepto caídas superiores al 35%</option>
               </select>
             </FormField>
 
-            <FormField label="Estabilidad de ingresos">
+            <FormField label="Estabilidad de ingresos" help="Si tus ingresos son estables, puedes permitirte más riesgo en cartera. Si son inciertos, conviene ser más prudente.">
               <select value={profile.incomeStability} onChange={(event) => onChange({ ...profile, incomeStability: event.target.value as InvestorProfile['incomeStability'] })}>
-                <option value="baja">Baja</option>
-                <option value="media">Media</option>
-                <option value="alta">Alta</option>
+                <option value="baja">Baja — ingresos irregulares o inciertos</option>
+                <option value="media">Media — empleo estable pero sin grandes colchones</option>
+                <option value="alta">Alta — ingresos estables y previsibles</option>
               </select>
             </FormField>
 
-            <FormField label="Experiencia inversora">
+            <FormField label="Experiencia inversora" help="No afecta al cálculo de riesgo, pero sí a las explicaciones y advertencias que verás después.">
               <select value={profile.experience} onChange={(event) => onChange({ ...profile, experience: event.target.value as InvestorProfile['experience'] })}>
-                <option value="principiante">Principiante</option>
-                <option value="intermedio">Intermedio</option>
-                <option value="avanzado">Avanzado</option>
+                <option value="principiante">Principiante — llevo poco tiempo invirtiendo</option>
+                <option value="intermedio">Intermedio — conozco los productos básicos</option>
+                <option value="avanzado">Avanzado — gestiono mi cartera activamente</option>
               </select>
             </FormField>
 

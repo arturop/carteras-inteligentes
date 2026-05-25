@@ -45,11 +45,13 @@ export function ActionPlanPage({ state, profile, holdings }: ActionPlanPageProps
         <p><strong>Regla de rebalanceo:</strong> revisar si una clase de activo se desvía más de 5 puntos porcentuales. Priorizar nuevas aportaciones antes de vender si hay impacto fiscal.</p>
       </Card>
 
-      <Card title="Acciones sugeridas">
+      <Card title="Acciones sugeridas" tone="highlight">
         <ol className="action-list">
           {narrative.map((item) => <li key={item}>{item}</li>)}
           <li>Revisar costes totales: TER, custodia, cambio de divisa y fiscalidad de distribuciones.</li>
-          <li>Antes de vender ETFs, acciones o fondos con plusvalías, revisar impacto fiscal.</li>
+          <li>Antes de vender ETFs, acciones o fondos con plusvalías, revisar impacto fiscal en el IRPF.</li>
+          <li>Si tienes fondos traspasables, prioriza traspasos frente a venta + recompra para diferir la tributación.</li>
+          <li>Documentar tu política de inversión por escrito ayuda a no tomar decisiones impulsivas en caídas.</li>
         </ol>
       </Card>
 
@@ -64,8 +66,9 @@ export function ActionPlanPage({ state, profile, holdings }: ActionPlanPageProps
         </div>
       </Card>
 
-      <Card title="Exportar">
-        <p>Descarga una copia JSON local. No se envía nada a ningún servidor.</p>
+      <Card title="Exportar y guardar">
+        <p>Descarga una copia JSON local de tu plan. Puedes volver a importarla en cualquier momento desde el navegador. No se envía nada a ningún servidor.</p>
+        <p className="card-body">También puedes copiar el texto del plan y guardarlo como documento para revisarlo periódicamente—por ejemplo, una vez al año o cuando cambie tu situación personal.</p>
         <button className="primary-button" type="button" onClick={downloadJson}>Descargar mi plan</button>
       </Card>
     </div>
