@@ -3,7 +3,7 @@ import './styles/app.css';
 import { AppLayout } from './components/AppLayout';
 import type { AppState, StepId } from './app/appState';
 import { initialAppState, nextStep } from './app/appState';
-import { loadPlan, savePlan } from './storage/localPlanStore';
+import { importPlanJson, loadPlan, savePlan } from './storage/localPlanStore';
 import { HomePage } from './pages/HomePage';
 import { ProfilePage } from './pages/ProfilePage';
 import { PortfolioPage } from './pages/PortfolioPage';
@@ -25,9 +25,16 @@ function App() {
     setState((current) => ({ ...current, currentStep: nextStep(current.currentStep) }));
   }
 
+  function handleImport(json: string) {
+    const imported = importPlanJson(json);
+    if (imported) {
+      setState(imported);
+    }
+  }
+
   return (
     <AppLayout currentStep={state.currentStep} onStepChange={setStep}>
-      {state.currentStep === 'inicio' && <HomePage onNext={setStep} />}
+      {state.currentStep === 'inicio' && <HomePage onNext={setStep} onImport={handleImport} />}
       {state.currentStep === 'perfil' && (
         <ProfilePage
           profile={state.profile}

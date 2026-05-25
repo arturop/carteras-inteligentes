@@ -1,11 +1,29 @@
+import { useRef } from 'react';
+import type { ChangeEvent } from 'react';
 import type { StepId } from '../app/appState';
 import { Card } from '../components/Card';
 
 interface HomePageProps {
   onNext: (step: StepId) => void;
+  onImport: (json: string) => void;
 }
 
-export function HomePage({ onNext }: HomePageProps) {
+export function HomePage({ onNext, onImport }: HomePageProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleFileChange(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === 'string') {
+        onImport(reader.result);
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
+  }
+
   return (
     <div className="page-stack">
       <section className="hero">
@@ -15,7 +33,11 @@ export function HomePage({ onNext }: HomePageProps) {
           Carteras Inteligentes convierte principios de construcción sistemática de carteras en un flujo práctico para inversores en España.
           No es un resumen por capítulos: es una herramienta para diagnosticar, asignar, rebalancear y documentar tu plan.
         </p>
-        <button className="primary-button" onClick={() => onNext('perfil')} type="button">Empezar diagnóstico</button>
+        <div className="hero-actions">
+          <button className="primary-button" onClick={() => onNext('perfil')} type="button">Empezar diagnóstico</button>
+          <button className="secondary-button" onClick={() => fileInputRef.current?.click()} type="button">Importar plan guardado</button>
+          <input ref={fileInputRef} type="file" accept=".json" style={{ display: 'none' }} onChange={handleFileChange} />
+        </div>
       </section>
 
       <div className="grid-3">
