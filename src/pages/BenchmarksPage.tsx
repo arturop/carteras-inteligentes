@@ -61,13 +61,13 @@ export function BenchmarksPage({
   );
 
   const userProjection = useMemo(
-    () => projectPortfolio(total, targets, assumptions, annualContribution, annualSpend),
-    [total, targets, assumptions, annualContribution, annualSpend],
+    () => projectPortfolio(total, targets, assumptions, annualContribution, annualSpend, profile.yearsToRetirement),
+    [total, targets, assumptions, annualContribution, annualSpend, profile.yearsToRetirement],
   );
 
   const comparison = useMemo(
-    () => compareBenchmarks(userProjection, 'Mi cartera', '#0f2433', total, assumptions, annualContribution, annualSpend),
-    [userProjection, total, assumptions, annualContribution, annualSpend],
+    () => compareBenchmarks(userProjection, 'Mi cartera', '#0f2433', total, assumptions, annualContribution, annualSpend, profile.yearsToRetirement),
+    [userProjection, total, assumptions, annualContribution, annualSpend, profile.yearsToRetirement],
   );
 
   const activeBenchmarks = comparison.benchmarks.filter((bp) => selectedBenchmarks.has(bp.benchmark.id));

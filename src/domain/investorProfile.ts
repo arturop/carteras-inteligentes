@@ -5,6 +5,7 @@ export type IncomeStability = 'baja' | 'media' | 'alta';
 export interface InvestorProfile {
   age: number;
   horizonYears: number;
+  yearsToRetirement: number;
   monthlyContribution: number;
   emergencyFundMonths: number;
   drawdownTolerance: DrawdownTolerance;
@@ -25,6 +26,7 @@ export interface RiskAssessment {
 export const defaultProfile: InvestorProfile = {
   age: 45,
   horizonYears: 15,
+  yearsToRetirement: 15,
   monthlyContribution: 500,
   emergencyFundMonths: 6,
   drawdownTolerance: 'media',

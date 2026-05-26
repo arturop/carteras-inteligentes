@@ -42,8 +42,8 @@ export function EvolutionPage({
   }
 
   const projection = useMemo(
-    () => projectPortfolio(total, targets, assumptions, annualContribution, annualSpend),
-    [total, targets, assumptions, annualContribution, annualSpend],
+    () => projectPortfolio(total, targets, assumptions, annualContribution, annualSpend, profile.yearsToRetirement),
+    [total, targets, assumptions, annualContribution, annualSpend, profile.yearsToRetirement],
   );
 
   const independenceYears = projection.independenceYear;

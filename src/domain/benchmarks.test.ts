@@ -24,14 +24,14 @@ describe('compareBenchmarks', () => {
   };
 
   it('returns projections for all benchmarks', () => {
-    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0);
-    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0);
+    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0, 10);
+    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0, 10);
     expect(comparison.benchmarks).toHaveLength(benchmarks.length);
   });
 
   it('all-equity outperforms user portfolio with high equity allocation', () => {
-    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0);
-    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0);
+    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0, 10);
+    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0, 10);
     const allEquity = comparison.benchmarks.find((bp) => bp.benchmark.id === 'all-equity');
     const userFinal = userProjection.years[userProjection.years.length - 1].centralValue;
     const equityFinal = allEquity!.projection.years[allEquity!.projection.years.length - 1].centralValue;
@@ -39,8 +39,8 @@ describe('compareBenchmarks', () => {
   });
 
   it('all-bonds underperforms user portfolio with high equity allocation', () => {
-    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0);
-    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0);
+    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0, 10);
+    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0, 10);
     const allBonds = comparison.benchmarks.find((bp) => bp.benchmark.id === 'all-bonds');
     const userFinal = userProjection.years[userProjection.years.length - 1].centralValue;
     const bondsFinal = allBonds!.projection.years[allBonds!.projection.years.length - 1].centralValue;
@@ -48,16 +48,16 @@ describe('compareBenchmarks', () => {
   });
 
   it('all-equity has higher drawdown than 60/40', () => {
-    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0);
-    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0);
+    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0, 10);
+    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0, 10);
     const allEquity = comparison.benchmarks.find((bp) => bp.benchmark.id === 'all-equity')!;
     const sixtyForty = comparison.benchmarks.find((bp) => bp.benchmark.id === 'sixty-forty')!;
     expect(allEquity.projection.maxDrawdownPct).toBeGreaterThanOrEqual(sixtyForty.projection.maxDrawdownPct);
   });
 
   it('preserves user projection in comparison result', () => {
-    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0);
-    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0);
+    const userProjection = projectPortfolio(50000, targets, assumptions, 6000, 0, 10);
+    const comparison = compareBenchmarks(userProjection, 'Mi cartera', '#000', 50000, assumptions, 6000, 0, 10);
     expect(comparison.userProjection).toEqual(userProjection);
     expect(comparison.userLabel).toBe('Mi cartera');
     expect(comparison.userColor).toBe('#000');

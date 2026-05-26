@@ -27,6 +27,7 @@ describe('portfolio domain', () => {
     const risk = assessInvestorRisk({
       age: 40,
       horizonYears: 20,
+      yearsToRetirement: 20,
       monthlyContribution: 1000,
       emergencyFundMonths: 6,
       drawdownTolerance: 'alta',
@@ -42,6 +43,7 @@ describe('portfolio domain', () => {
     const risk = assessInvestorRisk({
       age: 45,
       horizonYears: 15,
+      yearsToRetirement: 15,
       monthlyContribution: 500,
       emergencyFundMonths: 6,
       drawdownTolerance: 'media',

@@ -10,6 +10,8 @@ const sampleState: AppState = {
   profile: defaultProfile,
   holdings: sampleHoldings(),
   assumptions: defaultAssumptions,
+  annualContribution: 0,
+  annualSpend: 0,
 };
 
 describe('plan import/export', () => {

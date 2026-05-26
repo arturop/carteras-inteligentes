@@ -96,6 +96,7 @@ export function projectPortfolio(
   assumptions: SimulationAssumptions,
   annualContribution: number,
   annualSpend: number,
+  yearsToRetirement: number,
 ): ProjectionSummary {
   const weightedReturn = targetAllocation.reduce((sum, target) => {
     const assetReturn = assumptions.annualReturns.find((r) => r.assetClass === target.assetClass);
@@ -125,25 +126,30 @@ export function projectPortfolio(
   };
 
   for (let year = 1; year <= assumptions.yearsToProject; year++) {
-    contributionsValue += annualContribution;
+    const isAccumulation = year <= yearsToRetirement;
+    const contribution = isAccumulation ? annualContribution : 0;
+    const spend = isAccumulation ? 0 : annualSpend;
 
-    // Portfolio growth (without spend) — used for drawdown calculation
-    centralValue = Math.max(0, centralValue) * (1 + weightedReturn / 100) + annualContribution;
-    optimisticValue = Math.max(0, optimisticValue) * (1 + optimisticReturn / 100) + annualContribution;
-    pessimisticValue = Math.max(0, pessimisticValue) * (1 + pessimisticReturn / 100) + annualContribution;
+    contributionsValue += contribution;
 
-    // Net worth (with spend) — used for independence year and display
+    // Portfolio growth (gross, without spend) — used for drawdown in accumulation phase
+    centralValue = Math.max(0, centralValue) * (1 + weightedReturn / 100) + contribution;
+    optimisticValue = Math.max(0, optimisticValue) * (1 + optimisticReturn / 100) + contribution;
+    pessimisticValue = Math.max(0, pessimisticValue) * (1 + pessimisticReturn / 100) + contribution;
+
+    // Net worth (with spend) — used for display and independence year
     // Each year: apply growth, add contribution, then spend what's available.
     // Portfolio cannot go below 0 (no debt, no negative wealth).
-    centralWithSpend = Math.max(0, Math.max(0, centralWithSpend) * (1 + weightedReturn / 100) + annualContribution - annualSpend);
-    optimisticWithSpend = Math.max(0, Math.max(0, optimisticWithSpend) * (1 + optimisticReturn / 100) + annualContribution - annualSpend);
-    pessimisticWithSpend = Math.max(0, Math.max(0, pessimisticWithSpend) * (1 + pessimisticReturn / 100) + annualContribution - annualSpend);
+    centralWithSpend = Math.max(0, Math.max(0, centralWithSpend) * (1 + weightedReturn / 100) + contribution - spend);
+    optimisticWithSpend = Math.max(0, Math.max(0, optimisticWithSpend) * (1 + optimisticReturn / 100) + contribution - spend);
+    pessimisticWithSpend = Math.max(0, Math.max(0, pessimisticWithSpend) * (1 + pessimisticReturn / 100) + contribution - spend);
 
-    // Drawdown is calculated on the investment portfolio (without spend)
-    if (centralValue > peakValue) {
-      peakValue = centralValue;
+    // Drawdown: track on gross portfolio in accumulation, on net portfolio in decumulation
+    const drawdownBase = isAccumulation ? centralValue : centralWithSpend;
+    if (drawdownBase > peakValue) {
+      peakValue = drawdownBase;
     }
-    const drawdown = peakValue > 0 ? ((peakValue - centralValue) / peakValue) * 100 : 0;
+    const drawdown = peakValue > 0 ? ((peakValue - drawdownBase) / peakValue) * 100 : 0;
     if (drawdown > maxDrawdownPct) {
       maxDrawdownPct = drawdown;
     }
@@ -254,6 +260,7 @@ export function compareBenchmarks(
   assumptions: SimulationAssumptions,
   annualContribution: number,
   annualSpend: number,
+  yearsToRetirement: number,
 ): BenchmarkComparison {
   const benchmarkProjections: BenchmarkProjection[] = benchmarks.map((benchmark) => ({
     benchmark,
@@ -263,6 +270,7 @@ export function compareBenchmarks(
       assumptions,
       annualContribution,
       annualSpend,
+      yearsToRetirement,
     ),
   }));
 
