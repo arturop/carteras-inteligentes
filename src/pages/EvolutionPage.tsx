@@ -7,7 +7,7 @@ import { targetAllocationFromRisk } from '../domain/allocation';
 import type { SimulationAssumptions } from '../domain/assumptions';
 import { projectPortfolio, formatCurrency } from '../domain/assumptions';
 import { Card } from '../components/Card';
-import { CurrencyInput } from '../components/CurrencyInput';
+import { MoneyInput } from '../components/MoneyInput';
 import { ProjectionChart } from '../components/ProjectionChart';
 
 interface EvolutionPageProps {
@@ -61,7 +61,7 @@ export function EvolutionPage({
 
       <Card title="Tu escenario base" tone="highlight">
         <div className="input-grid">
-          <CurrencyInput
+          <MoneyInput
             id="ev-annualContribution"
             label="¿Cuánto invertirás al año? (€)"
             help="Cantidad que planeas aportar a tu cartera cada año (después de impuestos). Si no aportas regularmente, pon 0."
@@ -69,7 +69,7 @@ export function EvolutionPage({
             step={500}
             onChange={setAnnualContribution}
           />
-          <CurrencyInput
+          <MoneyInput
             id="ev-annualSpend"
             label="¿Cuánto quieres poder vivir al año? (€)"
             help="El gasto anual que quieres cubrir con tu cartera cuando dejes de trabajar. La independencia se alcanza cuando el patrimonio llega a 25× esta cantidad (regla del 4%)."

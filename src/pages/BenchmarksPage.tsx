@@ -7,7 +7,7 @@ import { targetAllocationFromRisk } from '../domain/allocation';
 import type { SimulationAssumptions, BenchmarkComparison } from '../domain/assumptions';
 import { projectPortfolio, compareBenchmarks, formatCurrency } from '../domain/assumptions';
 import { Card } from '../components/Card';
-import { CurrencyInput } from '../components/CurrencyInput';
+import { MoneyInput } from '../components/MoneyInput';
 
 interface BenchmarksPageProps {
   profile: InvestorProfile;
@@ -102,7 +102,7 @@ export function BenchmarksPage({
 
       <Card title="Tu escenario base" tone="highlight">
         <div className="input-grid">
-          <CurrencyInput
+          <MoneyInput
             id="bench-annualContribution"
             label="¿Cuánto invertirás al año? (€)"
             help="Cantidad que planeas aportar a tu cartera cada año (después de impuestos). Si no aportas regularmente, pon 0."
@@ -110,7 +110,7 @@ export function BenchmarksPage({
             step={500}
             onChange={setAnnualContribution}
           />
-          <CurrencyInput
+          <MoneyInput
             id="bench-annualSpend"
             label="¿Cuánto quieres poder vivir al año? (€)"
             help="El gasto anual que quieres cubrir con tu cartera cuando dejes de trabajar. La independencia se alcanza cuando el patrimonio llega a 25× esta cantidad (regla del 4%)."
