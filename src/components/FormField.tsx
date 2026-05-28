@@ -20,11 +20,10 @@ interface NumberInputProps {
   id?: string;
   value: number;
   min?: number;
-  step?: number;
   onChange: (value: number) => void;
 }
 
-export function NumberInput({ id, value, min = 0, step = 1, onChange }: NumberInputProps) {
+export function NumberInput({ id, value, min = 0, onChange }: NumberInputProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const mountedRef = useRef(false);
 
