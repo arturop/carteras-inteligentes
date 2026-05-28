@@ -29,6 +29,7 @@ export function EvolutionPage({
   onChange,
   onNext,
 }: EvolutionPageProps) {
+  console.log('[EvolutionPage] render', { annualContribution, annualSpend });
   const risk = assessInvestorRisk(profile);
   const targets = targetAllocationFromRisk(risk);
   const total = portfolioTotal(holdings);
